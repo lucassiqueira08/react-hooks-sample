@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
 
-function App() {
+export default function App() {
+  // UseState declara o estado do componente
+  const [location, setLocation] = useState({});
+
+  useEffect(() => {
+    // Equivalente ao componentDidMount
+    const watchId = navigator.geolocation.watchPosition(handlePositionReceived);
+
+    // Equivalente ao componentWillUnmount
+    return () => navigator.geolocation.clearWatch(watchId)
+  }, []);
+
+  // Equivalente ao componentDidUpdate 
+  useEffect(() => {
+    console.log("Sua localização mudou");
+  }, [location])
+
+  function handlePositionReceived({ coords }) {
+    const { latitude, longitude } = coords;
+    setLocation({ latitude, longitude });
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      Latitude: {location.latitude} <br />
+      Longitude: {location.longitude}
+    </>
   );
 }
-
-export default App;
